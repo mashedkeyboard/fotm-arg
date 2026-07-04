@@ -10,7 +10,12 @@ export const actions = {
 			return fail(400, { username, errors: { username: { missing: true } } });
       }
 
-      setUser(cookies, username.toString());
+      const emfphone = data.get('emfphone');
+      if (!emfphone) {
+			return fail(400, { emfphone, errors: { emfphone: { missing: true } } });
+      }
+
+      setUser(cookies, username.toString(), emfphone.toString());
 
 		const startWith = getStartWith(cookies);
 

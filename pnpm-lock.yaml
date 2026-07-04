@@ -14,6 +14,9 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
+      play-dtmf:
+        specifier: ^3.0.2
+        version: 3.0.2
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -1624,6 +1627,9 @@ packages:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
     engines: {node: '>=12'}
 
+  play-dtmf@3.0.2:
+    resolution: {integrity: sha512-2HVJ3TCmtPeEzgYlALBNcoFL599Kk0w1Ng4Bg5y8zPbHJ7H3z1m9/X3ZyLtbiQgEsoY8EoxMt7K6M2o7fEbztw==}
+
   postcss-load-config@3.1.4:
     resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
     engines: {node: '>= 10'}
@@ -3053,6 +3059,8 @@ snapshots:
   picocolors@1.1.1: {}
 
   picomatch@4.0.4: {}
+
+  play-dtmf@3.0.2: {}
 
   postcss-load-config@3.1.4(postcss@8.5.15):
     dependencies:

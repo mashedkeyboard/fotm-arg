@@ -1,6 +1,5 @@
-<form method="POST">
-<label for="name">Enter a username</label>
-<input type="text" name="username" />
+<script>
+	import BeginForm from "$lib/components/BeginForm.svelte";
 
-<button type="submit">Get started</button>
-</form>
+</script>
+<BeginForm />

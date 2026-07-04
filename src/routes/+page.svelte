@@ -1,2 +1,17 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+	import BeginForm from '$lib/components/BeginForm.svelte';
+	import type { PageProps } from './$types';
+
+	let { data }: PageProps = $props();
+</script>
+
+<h1>welcome to moonhunt</h1>
+<p>hidden around the EMF site, you might find some little moons...</p>
+<p>collect them all to earn your stamp!</p>
+
+{#if data.isActive}
+    <h2>ready to find another?</h2>
+{:else}
+    <h2>new here?</h2>
+    <BeginForm />
+{/if}

@@ -1,0 +1,3 @@
+[submodule "main-site"]
+	path = main-site
+	url = https://github.com/ReFil/fotm-website

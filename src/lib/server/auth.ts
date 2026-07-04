@@ -14,12 +14,22 @@ const getUidHash = (uid: string) => {
     return createHmac('sha256', JWT_SECRET).update(uid).digest('base64');
 }
 
-export const isInSession = (cookies: Cookies): boolean => {
-    return !!cookies.get(UNAME_COOKIE_NAME);
+const validateSession = (cookies: Cookies): JwtPayload | false => {
+    const uid = cookies.get(UNAME_COOKIE_NAME);
+    try {
+        return jwt.verify(cookies.get(PROGRESS_COOKIE_NAME) || '', JWT_SECRET, { subject: getUidHash(uid || '') }) as JwtPayload;
+    } catch {
+        return false;
+    }
 }
 
-export const setUser = (cookies: Cookies, username: string) => {
-    cookies.set(UNAME_COOKIE_NAME, username + crypto.randomUUID(), DEFAULT_COOKIE_PROPS);
+export const isInSession = (cookies: Cookies): boolean => {    
+    return !!cookies.get(UNAME_COOKIE_NAME) && !!cookies.get(PROGRESS_COOKIE_NAME) && !!validateSession(cookies);
+}
+
+export const setUser = (cookies: Cookies, username: string, dect: string) => {
+    cookies.set(UNAME_COOKIE_NAME, username + '@' + dect + ':' + crypto.randomUUID(), DEFAULT_COOKIE_PROPS);
+    setTagsList(cookies, []);
 }
 
 
@@ -37,7 +47,9 @@ export const getTagsList = (cookies: Cookies): string[] => {
     const uid = cookies.get(UNAME_COOKIE_NAME);
     if (!uid) return [];
 
-    const token = jwt.verify(cookies.get(PROGRESS_COOKIE_NAME) || '', JWT_SECRET, { subject: getUidHash(uid) }) as JwtPayload;
+    const token = validateSession(cookies);
+    if (!token) return [];
+
     return token?.tagsList;
 }
 
@@ -48,7 +60,7 @@ export const setTagsList = (cookies: Cookies, tagsList: string[]) => {
     }
 
     const thisJwt = jwt.sign({
-         sub: uid,
+         sub: getUidHash(uid),
          tagsList
     }, JWT_SECRET);
 
