@@ -1,5 +1,8 @@
-<script>
+<script lang="ts">
 	import BeginForm from "$lib/components/BeginForm.svelte";
+	import type { PageProps } from "./$types";
 
+	let { form }: PageProps = $props();
 </script>
-<BeginForm />
+
+<BeginForm form={form} />

@@ -6,6 +6,7 @@ import { createHmac } from 'node:crypto';
 const JWT_SECRET = Buffer.from(JWT_SECRET_KEY, 'base64');
 const PROGRESS_COOKIE_NAME = 'FOTM-Progress';
 const UNAME_COOKIE_NAME = 'FOTM-User';
+const FRIENDTOKEN_COOKIE_NAME = 'FOTM-FriendToken';
 const STARTWITH_COOKIE_NAME = 'FOTM-StartWith';
 
 const DEFAULT_COOKIE_PROPS = { path: '/', maxAge: 60 * 60 * 24 * 900 };
@@ -32,6 +33,23 @@ export const setUser = (cookies: Cookies, username: string, dect: string) => {
     setTagsList(cookies, []);
 }
 
+export const setFriendToken = (cookies: Cookies, ip: string, ua: string, friendId: string) => {
+    cookies.set(FRIENDTOKEN_COOKIE_NAME, jwt.sign({
+        sub: friendId,
+        aud: `${ua}@${ip}`
+    }, JWT_SECRET), DEFAULT_COOKIE_PROPS);
+}
+
+export const getFriendId = (cookies: Cookies, ip: string, ua: string): string | undefined => {
+    const cookie = cookies.get(FRIENDTOKEN_COOKIE_NAME);
+    if (!cookie) return undefined;
+    
+    try {
+        return (jwt.verify(cookie, JWT_SECRET, { audience: `${ua}@${ip}`}) as JwtPayload).sub;
+    } catch {
+        return undefined;
+    }
+}
 
 export const setStartWith = (cookies: Cookies, startWithUuid: string) => {
     cookies.set(STARTWITH_COOKIE_NAME, startWithUuid, { ...DEFAULT_COOKIE_PROPS, maxAge: 60 * 60 * 4 });

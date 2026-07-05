@@ -1,9 +1,16 @@
 <script lang="ts">
 	import { PhoneTonePlayer, type Dtmf } from "play-dtmf";
 	import type { KeyboardEventHandler } from "svelte/elements";
+	import type { ActionData } from "../../routes/begin/$types";
+
+	let { form }: { form?: ActionData } = $props();
 
     const DTMF_MAP = [2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,7,8,8,8,9,9,9,9];
-    let phone: string = $state('');
+
+    // this is deliberately referencing the initial state in case of error
+    // svelte-ignore state_referenced_locally
+    let phone: string = $state(form?.emfphone?.toString() || '');
+
     let player: PhoneTonePlayer | null = $state(null);
 
     const changePhone: KeyboardEventHandler<HTMLInputElement> = (e) => {
@@ -28,19 +35,28 @@
 </script>
 
 <form method="POST" action="/begin">
+    {#if form?.error}
+        <div class="form-row">
+            <p>emf phones must be 4-5 digit numbers; usernames can't contain <code>@:;,</code></p>
+        </div>
+    {/if}
+
     <div class="form-row">
-        <label for="name">Enter a username</label>
-        <input type="text" name="username" />
+        <label for="name">Username</label>
+        <input type="text" name="username" value={form?.username} required pattern="[^@:;,]+" />
     </div>
 
     <div class="form-row">
-        <label for="emfphone">Enter your EMF phone number</label>
+        <label for="emfphone">EMF phone number</label>
         <input
             type="number"
             name="emfphone"
             onclick={() => player = new PhoneTonePlayer(new AudioContext())}
             onkeypress={changePhone}
             bind:value={phone}
+            required
+            min="1000"
+            max="99999"
         />
     </div>
 
