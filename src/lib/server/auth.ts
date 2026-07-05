@@ -11,6 +11,8 @@ const STARTWITH_COOKIE_NAME = 'FOTM-StartWith';
 
 const DEFAULT_COOKIE_PROPS = { path: '/', maxAge: 60 * 60 * 24 * 900 };
 
+export type SessionData = { username: string, dect: string, uuid: string, tags: string[] };
+
 const getUidHash = (uid: string) => {
     return createHmac('sha256', JWT_SECRET).update(uid).digest('base64');
 }
@@ -24,8 +26,21 @@ const validateSession = (cookies: Cookies): JwtPayload | false => {
     }
 }
 
-export const isInSession = (cookies: Cookies): boolean => {    
-    return !!cookies.get(UNAME_COOKIE_NAME) && !!cookies.get(PROGRESS_COOKIE_NAME) && !!validateSession(cookies);
+export const getSessionData = (cookies: Cookies): SessionData | false => {
+    const uname = cookies.get(UNAME_COOKIE_NAME);
+
+    if (!(!!uname && !!cookies.get(PROGRESS_COOKIE_NAME))) return false;
+
+    const session = validateSession(cookies);
+
+    if (!session) return false;
+
+    return {
+        username: uname.substring(0, uname.indexOf('@')),
+        dect: uname.substring(uname.indexOf('@') + 1, uname.indexOf(':')),
+        uuid: uname.substring(uname.indexOf(':') + 1),
+        tags: session.tagsList
+    }
 }
 
 export const setUser = (cookies: Cookies, username: string, dect: string) => {
@@ -59,16 +74,6 @@ export const getStartWith = (cookies: Cookies): string | undefined => {
     const val = cookies.get(STARTWITH_COOKIE_NAME);
     if (val) cookies.delete(STARTWITH_COOKIE_NAME, { path: '/' });
     return val;
-}
-
-export const getTagsList = (cookies: Cookies): string[] => {
-    const uid = cookies.get(UNAME_COOKIE_NAME);
-    if (!uid) return [];
-
-    const token = validateSession(cookies);
-    if (!token) return [];
-
-    return token?.tagsList;
 }
 
 export const setTagsList = (cookies: Cookies, tagsList: string[]) => {

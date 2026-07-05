@@ -26,4 +26,8 @@
 		box-shadow: 0 2em 1em var(--ourple);
 		background: var(--ourple-gradient);
 	}
+
+	:global(a) {
+		color: #f2f2f2;
+	}
 </style>

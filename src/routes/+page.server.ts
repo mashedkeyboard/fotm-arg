@@ -1,10 +1,10 @@
-import { getTagsList, isInSession } from '$lib/server/auth';
+import { getSessionData } from '$lib/server/auth';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ cookies }) => {
-    const isActive = isInSession(cookies);
+    const session = getSessionData(cookies);
     return {
-        isActive,
-        claimed: isActive ? getTagsList(cookies) : []
+        isActive: !!session,
+        claimed: session ? session.tags : []
     }
 };

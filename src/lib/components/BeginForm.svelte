@@ -2,6 +2,7 @@
 	import { PhoneTonePlayer, type Dtmf } from "play-dtmf";
 	import type { KeyboardEventHandler } from "svelte/elements";
 	import type { ActionData } from "../../routes/begin/$types";
+	import { resolve } from "$app/paths";
 
 	let { form }: { form?: ActionData } = $props();
 
@@ -34,7 +35,7 @@
     };
 </script>
 
-<form method="POST" action="/begin">
+<form method="POST" action={resolve("/begin")}>
     {#if form?.error}
         <div class="form-row">
             <p>emf phones must be 4-5 digit numbers; usernames can't contain <code>@:;,</code></p>

@@ -1,10 +1,10 @@
 import { getDb } from '$lib/server/db';
-import { getFriendId, getTagsList, setTagsList } from '$lib/server/auth';
+import { getFriendId, setTagsList } from '$lib/server/auth';
 import type { PageServerLoad } from './$types';
 
 import { redirect } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async ({ params, cookies, request, getClientAddress }) => {
+export const load: PageServerLoad = async ({ params, cookies, request, getClientAddress, locals }) => {
    const uuid = params.uuid;
    const db = getDb();
    const tag = await db.query.tags.findFirst({ where: { uuid } });
@@ -16,6 +16,6 @@ export const load: PageServerLoad = async ({ params, cookies, request, getClient
       }
    }
 
-   const currentTags = getTagsList(cookies);
+   const currentTags = locals.session!.tags;
    setTagsList(cookies, currentTags.concat(tag.id))
 };

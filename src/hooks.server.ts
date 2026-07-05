@@ -1,4 +1,4 @@
-import { isInSession, getFriendId, setStartWith } from '$lib/server/auth';
+import { getSessionData, getFriendId, setStartWith } from '$lib/server/auth';
 import { getDb } from '$lib/server/db';
 import { redirect, type Handle } from '@sveltejs/kit';
 
@@ -6,7 +6,10 @@ export const handle: Handle = async ({ event, resolve }) => {
     const friendId = getFriendId(event.cookies, event.getClientAddress(), event.request.headers.get('User-Agent') || '');
 
 	if (event.route.id?.includes('(authed)')) {
-		if (!isInSession(event.cookies)) {
+        const session = getSessionData(event.cookies);
+		if (session) {
+            event.locals.session = session;
+        } else {
             if (event.params.uuid) {
                 if (friendId) return redirect(307, `/friends/register/${event.params.uuid}`);
 

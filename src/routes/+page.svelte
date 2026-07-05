@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import BeginForm from '$lib/components/BeginForm.svelte';
 	import type { PageProps } from './$types';
 
@@ -11,6 +12,7 @@
 
 {#if data.isActive}
     <h2>ready to find another?</h2>
+    <a href={resolve("/help")}>give me my next hint</a>
 {:else}
     <h2>new here?</h2>
     <BeginForm />

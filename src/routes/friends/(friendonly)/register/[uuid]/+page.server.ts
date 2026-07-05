@@ -14,7 +14,7 @@ export const actions = {
             return fail(400, { title, hint, error: true });
         }
 
-        const newTag: typeof tags.$inferInsert = { uuid: params.uuid, title, hint, authorId: locals.friend.id };
+        const newTag: typeof tags.$inferInsert = { uuid: params.uuid, title, hint, authorId: locals.friend!.id };
         const db = getDb();
         await db.insert(tags).values(newTag)
 
