@@ -1,0 +1,42 @@
+services:
+  database:
+    image: 'postgres:18'
+    ports:
+      - 54321:5432
+    env_file:
+      - .env
+    networks:
+      - moonhunt-network
+
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 8080:3000
+    depends_on:
+      - database
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=database
+      - POSTGRES_PORT=5432
+    networks:
+      - moonhunt-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - 15433:80
+    env_file:
+      - .env
+    depends_on:
+      - database
+    networks:
+      - moonhunt-network
+    volumes:
+      - ${PWD}/pgadmin-data/:/var/lib/pgadmin/
+
+networks: 
+  moonhunt-network:
+    driver: bridge

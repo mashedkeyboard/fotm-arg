@@ -1,9 +1,8 @@
-import { JWT_SECRET_KEY } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import type { Cookies } from "@sveltejs/kit";
 import jwt, { type JwtPayload } from 'jsonwebtoken';
 import { createHmac } from 'node:crypto';
 
-const JWT_SECRET = Buffer.from(JWT_SECRET_KEY, 'base64');
 const PROGRESS_COOKIE_NAME = 'FOTM-Progress';
 const UNAME_COOKIE_NAME = 'FOTM-User';
 const FRIENDTOKEN_COOKIE_NAME = 'FOTM-FriendToken';
@@ -13,14 +12,16 @@ const DEFAULT_COOKIE_PROPS = { path: '/', maxAge: 60 * 60 * 24 * 900 };
 
 export type SessionData = { username: string, dect: string, uuid: string, tags: string[] };
 
+const jwtSecret = () => Buffer.from(env.JWT_SECRET_KEY, 'base64');
+
 const getUidHash = (uid: string) => {
-    return createHmac('sha256', JWT_SECRET).update(uid).digest('base64');
+    return createHmac('sha256', jwtSecret()).update(uid).digest('base64');
 }
 
 const validateSession = (cookies: Cookies): JwtPayload | false => {
     const uid = cookies.get(UNAME_COOKIE_NAME);
     try {
-        return jwt.verify(cookies.get(PROGRESS_COOKIE_NAME) || '', JWT_SECRET, { subject: getUidHash(uid || '') }) as JwtPayload;
+        return jwt.verify(cookies.get(PROGRESS_COOKIE_NAME) || '', jwtSecret(), { subject: getUidHash(uid || '') }) as JwtPayload;
     } catch {
         return false;
     }
@@ -52,7 +53,7 @@ export const setFriendToken = (cookies: Cookies, ip: string, ua: string, friendI
     cookies.set(FRIENDTOKEN_COOKIE_NAME, jwt.sign({
         sub: friendId,
         aud: `${ua}@${ip}`
-    }, JWT_SECRET), DEFAULT_COOKIE_PROPS);
+    }, jwtSecret()), DEFAULT_COOKIE_PROPS);
 }
 
 export const getFriendId = (cookies: Cookies, ip: string, ua: string): string | undefined => {
@@ -60,7 +61,7 @@ export const getFriendId = (cookies: Cookies, ip: string, ua: string): string | 
     if (!cookie) return undefined;
     
     try {
-        return (jwt.verify(cookie, JWT_SECRET, { audience: `${ua}@${ip}`}) as JwtPayload).sub;
+        return (jwt.verify(cookie, jwtSecret(), { audience: `${ua}@${ip}`}) as JwtPayload).sub;
     } catch {
         return undefined;
     }
@@ -85,7 +86,7 @@ export const setTagsList = (cookies: Cookies, tagsList: string[]) => {
     const thisJwt = jwt.sign({
          sub: getUidHash(uid),
          tagsList
-    }, JWT_SECRET);
+    }, jwtSecret());
 
     cookies.set(PROGRESS_COOKIE_NAME, thisJwt, DEFAULT_COOKIE_PROPS);
 
