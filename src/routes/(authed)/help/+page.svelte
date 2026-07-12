@@ -20,6 +20,11 @@
 		}
 	});
 </script>
+
+<svelte:head>
+    <title>find your next moon...</title> 
+</svelte:head>
+
 {#if data.nextHint}
 <h1>your next hint, {data.session.username}...</h1>
 <p>{data.nextHint}</p>

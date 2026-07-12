@@ -3,6 +3,11 @@
 
 	let { data }: PageProps = $props();
 </script>
+
+<svelte:head>
+    <title>{data.completion.username} completed moonhunt!</title> 
+</svelte:head>
+
 {#if data.completion.alreadyClaimed}
 <h1>This completion has already been claimed!</h1>
 {/if}

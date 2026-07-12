@@ -1,0 +1,36 @@
+{
+  "icon": {
+    "desktop": {
+      "regularIconTransformation": {
+        "type": "none"
+      },
+      "darkIconType": "regular",
+      "darkIconTransformation": {
+        "type": "none"
+      }
+    },
+    "touch": {
+      "transformation": {
+        "type": "background",
+        "backgroundColor": "#2f1945",
+        "backgroundRadius": 0,
+        "imageScale": 0.8
+      },
+      "appTitle": "moonhunt"
+    },
+    "webAppManifest": {
+      "transformation": {
+        "type": "background",
+        "backgroundColor": "#ffffff",
+        "backgroundRadius": 0,
+        "imageScale": 0.7
+      },
+      "backgroundColor": "#2f1945",
+      "name": "moonhunt",
+      "shortName": "FOTM",
+      "themeColor": "#2f1945"
+    }
+  },
+  "path": "/",
+  "skipMetadataInjection": false
+}

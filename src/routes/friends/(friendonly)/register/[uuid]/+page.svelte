@@ -5,13 +5,19 @@
 
     // svelte-ignore state_referenced_locally
     const isExistingTag = data.tag;
+
+    const title = isExistingTag ? `edit tag ${data.tag!.title}` : 'register new tag';
 </script>
 
 {#if data.created}
 <p>Successfully created tag!</p>
 {/if}
 
-<h1>{#if isExistingTag}edit tag {data.tag!.title}{:else}register new tag{/if}</h1>
+<svelte:head>
+    <title>{title}</title> 
+</svelte:head>
+
+<h1>{title}</h1>
 
 {#if form?.error}
 <p>Error creating tag - please check the values</p>

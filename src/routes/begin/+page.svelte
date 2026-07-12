@@ -5,4 +5,8 @@
 	let { form }: PageProps = $props();
 </script>
 
+<svelte:head>
+    <title>begin your moonhunt</title> 
+</svelte:head>
+
 <BeginForm form={form} />
