@@ -9,7 +9,7 @@ services:
       - moonhunt-network
     volumes:
       - bind:
-          create_host_path: False
+          create_host_path: True
           propagation: rprivate
         read_only: False
         source: ${DATA_VOL}/postgresql/
@@ -44,7 +44,7 @@ services:
       - moonhunt-network
     volumes:
       - bind:
-          create_host_path: False
+          create_host_path: True
           propagation: rprivate
         read_only: False
         source: ${DATA_VOL}/pgadmin/
