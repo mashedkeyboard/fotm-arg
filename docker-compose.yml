@@ -7,6 +7,14 @@ services:
       - .env
     networks:
       - moonhunt-network
+    volumes:
+      - bind:
+          create_host_path: False
+          propagation: rprivate
+        read_only: False
+        source: ${DATA_VOL}/postgresql/
+        target: /var/lib/postgresql
+        type: bind
 
   app:
     build:
@@ -35,7 +43,13 @@ services:
     networks:
       - moonhunt-network
     volumes:
-      - ${PWD}/pgadmin-data/:/var/lib/pgadmin/
+      - bind:
+          create_host_path: False
+          propagation: rprivate
+        read_only: False
+        source: ${DATA_VOL}/pgadmin/
+        target: /var/lib/pgadmin
+        type: bind
 
 networks: 
   moonhunt-network:
