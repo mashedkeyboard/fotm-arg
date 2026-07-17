@@ -15,7 +15,16 @@ export const load: PageServerLoad = async ({ params, cookies, request, getClient
          return redirect(307, '/');
       }
    }
+   const author = await db.query.friends.findFirst({ where: { id: tag.authorId! } });
 
    const currentTags = locals.session!.tags;
    setTagsList(cookies, currentTags.concat(tag.id))
+
+   return {
+      tagTitle: tag.title,
+      author: {
+         name: author?.name,
+         phone: author?.dect
+      }
+   };
 };
